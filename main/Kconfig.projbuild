@@ -14,6 +14,24 @@ config WIFI_PASSWORD
 
 		Can be left blank if the network has no security set.
 
+config TRIGGER_BUTTON_GPIO
+    int "Trigger Button GPIO number"
+	range 0 39
+	default 4
+	help
+		GPIO number (IOxx) connected to trigger push-button.
+
+		Some GPIOs are used for other purposes (flash connections, etc.) and cannot be used.
+
+config SLACK_API_ENDPOINT
+    string "Slack API postMessage Endpoint"
+	default "https://slack.com/api/chat.postMessage"
+	help
+		Slack API postMessage Endpoint.
+
+		In most case, you do not have to change this value.
+		You can change if you need to test using another site.
+
 config SLACK_API_TOKEN
     string "Slack API Token"
 	default "xoxp-XXXXXX..."
