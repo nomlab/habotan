@@ -21,18 +21,18 @@
 #define MAX_HTTP_RECV_BUFFER 512
 static const char *TAG = "HTTP_CLIENT";
 
-/* Root cert for howsmyssl.com, taken from howsmyssl_com_root_cert.pem
+/* Root cert for slack.com, taken from slack_com_root_cert.pem
 
    The PEM file was extracted from the output of this command:
-   openssl s_client -showcerts -connect www.howsmyssl.com:443 </dev/null
+   openssl s_client -showcerts -connect slack.com:443 </dev/null
 
    The CA root cert is the last cert given in the chain of certs.
 
    To embed it in the app binary, the PEM file is named
    in the component.mk COMPONENT_EMBED_TXTFILES variable.
 */
-extern const char howsmyssl_com_root_cert_pem_start[] asm("_binary_howsmyssl_com_root_cert_pem_start");
-extern const char howsmyssl_com_root_cert_pem_end[]   asm("_binary_howsmyssl_com_root_cert_pem_end");
+extern const char slack_com_root_cert_pem_start[] asm("_binary_slack_com_root_cert_pem_start");
+extern const char slack_com_root_cert_pem_end[]   asm("_binary_slack_com_root_cert_pem_end");
 
 esp_err_t _http_event_handler(esp_http_client_event_t *evt)
 {
@@ -299,9 +299,9 @@ static void http_auth_digest()
 static void https_with_url()
 {
     esp_http_client_config_t config = {
-        .url = "https://www.howsmyssl.com",
+        .url = "https://www.slack.com",
         .event_handler = _http_event_handler,
-        .cert_pem = howsmyssl_com_root_cert_pem_start,
+        .cert_pem = slack_com_root_cert_pem_start,
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_err_t err = esp_http_client_perform(client);
@@ -319,11 +319,11 @@ static void https_with_url()
 static void https_with_hostname_path()
 {
     esp_http_client_config_t config = {
-        .host = "www.howsmyssl.com",
+        .host = "www.slack.com",
         .path = "/",
         .transport_type = HTTP_TRANSPORT_OVER_SSL,
         .event_handler = _http_event_handler,
-        .cert_pem = howsmyssl_com_root_cert_pem_start,
+        .cert_pem = slack_com_root_cert_pem_start,
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
     esp_err_t err = esp_http_client_perform(client);
@@ -379,7 +379,7 @@ static void http_absolute_redirect()
 static void http_redirect_to_https()
 {
     esp_http_client_config_t config = {
-        .url = "http://httpbin.org/redirect-to?url=https%3A%2F%2Fwww.howsmyssl.com",
+        .url = "http://httpbin.org/redirect-to?url=https%3A%2F%2Fwww.slack.com",
         .event_handler = _http_event_handler,
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
