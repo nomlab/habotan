@@ -14,7 +14,7 @@
  * GPIO_INPUT_IO_0:  input, pulled up, interrupt from rising edge.
  */
 
-#define GPIO_INPUT_IO_0     TRIGGER_BUTTON_GPIO
+#define GPIO_INPUT_IO_0     CONFIG_TRIGGER_BUTTON_GPIO
 #define GPIO_INPUT_PIN_SEL  (1ULL<<GPIO_INPUT_IO_0)
 #define ESP_INTR_FLAG_DEFAULT 0
 
