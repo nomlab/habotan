@@ -151,6 +151,43 @@ static void http_rest_with_url()
     esp_http_client_cleanup(client);
 }
 
+
+#define SLACK_API_ENDPOINT CONFIG_SLACK_API_ENDPOINT
+#define SLACK_API_TOKEN    CONFIG_SLACK_API_TOKEN
+#define SLACK_CHANNEL_NAME CONFIG_SLACK_CHANNEL_NAME
+#define SLACK_MESSAGE      CONFIG_SLACK_MESSAGE
+
+static void post_to_slack()
+{
+    esp_http_client_config_t config = {
+        .url = SLACK_API_ENDPOINT,
+        .event_handler = _http_event_handler,
+        .cert_pem = slack_com_root_cert_pem_start,
+    };
+    esp_http_client_handle_t client = esp_http_client_init(&config);
+
+    const char *post_data =
+      "token="  SLACK_API_TOKEN
+      "&channel="  SLACK_CHANNEL_NAME
+      "&text=" SLACK_MESSAGE
+      "&as_user=true";
+
+    esp_http_client_set_method(client, HTTP_METHOD_POST);
+    esp_http_client_set_post_field(client, post_data, strlen(post_data));
+    esp_err_t err = esp_http_client_perform(client);
+
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG, "HTTPS POST Status = %d, content_length = %d",
+                esp_http_client_get_status_code(client),
+                esp_http_client_get_content_length(client));
+    } else {
+        ESP_LOGE(TAG, "HTTPS POST request failed: %s", esp_err_to_name(err));
+    }
+
+    esp_http_client_cleanup(client);
+}
+
+
 static void http_rest_with_hostname_path()
 {
     esp_http_client_config_t config = {
@@ -487,7 +524,8 @@ static void https_async()
 static void http_test_task(void *pvParameters)
 {
     app_wifi_wait_connected();
-    ESP_LOGI(TAG, "Connected to AP, begin http example");
+    ESP_LOGI(TAG, "Connected to AP, begin posting to slack");
+/*
     http_rest_with_url();
     http_rest_with_hostname_path();
     http_auth_basic();
@@ -501,8 +539,9 @@ static void http_test_task(void *pvParameters)
     http_download_chunk();
     http_perform_as_stream_reader();
     https_async();
-
-    ESP_LOGI(TAG, "Finish http example");
+*/
+    post_to_slack();
+    ESP_LOGI(TAG, "Finish posting to slack");
     vTaskDelete(NULL);
 }
 
