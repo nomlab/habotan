@@ -19,15 +19,15 @@
 #define ESP_INTR_FLAG_DEFAULT 0
 
 static xQueueHandle gpio_evt_queue = NULL;
-double pivot_time, time;
+double pivot_time, current_time;
 
 static void IRAM_ATTR gpio_isr_handler(void* arg)
 {
     uint32_t gpio_num = (uint32_t) arg;
-    timer_get_counter_time_sec(TIMER_GROUP_0, TIMER_0, &time);
-    if((time - pivot_time) > 0.1){
+    timer_get_counter_time_sec(TIMER_GROUP_0, TIMER_0, &current_time);
+    if((current_time - pivot_time) > 0.1){
         xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
-        pivot_time = time;
+        pivot_time = current_time;
     }
 }
 
