@@ -36,22 +36,24 @@ config SLACK_API_TOKEN
     string "Slack API Token"
 	default "xoxp-XXXXXX..."
 	help
-                Slack legacy token.
-                You can get your legacy token from after logged in:
-                  https://api.slack.com/custom-integrations/legacy-tokens
-                Never share legacy tokens with others !!!
+		Slack legacy token.
+
+		You can get your legacy token from after logged in:
+		  https://api.slack.com/custom-integrations/legacy-tokens
+		Never share legacy tokens with others !!!
 
 config SLACK_CHANNEL_NAME
     string "Slack Channel Name to Post"
 	default "general"
 	help
-                Slack channel name to post.
-                For example general, random, etc..
+		Slack channel name to post.
+
+		For example general, random, etc..
 
 config SLACK_MESSAGE
     string "Slack Message to Post"
 	default "Hello!"
 	help
-                Message to post when connected to Slack.
+		Message to post when connected to Slack.
 
 endmenu
