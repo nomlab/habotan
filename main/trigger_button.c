@@ -7,6 +7,7 @@
 #include "driver/gpio.h"
 
 #include "driver/timer.h"
+#include "sdkconfig.h"
 
 /**
  * GPIO status:
