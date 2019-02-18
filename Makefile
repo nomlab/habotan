@@ -3,7 +3,6 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := esp-http-client-example
+PROJECT_NAME := habotan
 
 include $(IDF_PATH)/make/project.mk
-
