@@ -18,6 +18,64 @@
 
 #include "esp_http_client.h"
 
+
+/// Perform URL encode on `s` copying the result into `buf`.
+///
+/// Return value is the strlen of encoded string.
+/// If the return value is larger than `buf_size` -1,
+/// that indicates `buf` doesn't enclose whole encoded string.
+///
+/// `buf` can be NULL. In this case, urlencode estimates
+/// strlen of encoded string without updating `buf`.
+/// For example:
+///
+///   size_t buf_size = urlencode(s, NULL, 0) + 1;
+///   char *buf = malloc(buf_size);
+///   urlencode(s, buf, buf_size);
+///
+/// SEE ALSO: https://url.spec.whatwg.org/#urlencoded-serializing
+///
+size_t urlencode(const char *s, char *buf, size_t buf_size)
+{
+  const char *hex = "0123456789ABCDEF";
+  size_t size = 0;
+
+  while (*s) {
+    if (('a' <= *s && *s <= 'z') ||
+        ('A' <= *s && *s <= 'Z') ||
+        ('0' <= *s && *s <= '9') ||
+        *s == '*' || *s == '.'   ||
+        *s == '-' || *s == '_') {
+
+      if (buf && size + 1 < buf_size) { *buf++ = *s; }
+      size++;
+
+    } else if (*s == ' ') {
+
+      if (buf && size + 1 < buf_size) { *buf++ = '+'; }
+      size++;
+
+    } else {
+
+      if (buf && size + 3 < buf_size) {
+        *buf++ = '%';
+        *buf++ = hex[(*s >> 4) & 0x0f];
+        *buf++ = hex[(*s >> 0) & 0x0f];
+      }
+      size += 3;
+    }
+    s++;
+  }
+
+  if (buf && buf_size > 0) { *buf = '\0'; }
+  return size;
+}
+
+size_t strlen_if_urlencode(const char *s)
+{
+  return urlencode(s, NULL, 0);
+}
+
 #define MAX_HTTP_RECV_BUFFER 512
 static const char *TAG = "HTTP_CLIENT";
 
